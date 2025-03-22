@@ -36,6 +36,7 @@ exports.register = async (req, res) => {
       username,
       password: hashedPassword, // Guarda la contraseña cifrada
       secretKey: uniqueSecretKey, // Guarda la clave secreta única
+      clients: []
     };
 
     // Agregar el nuevo usuario a la colección en Firestore
