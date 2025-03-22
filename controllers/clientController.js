@@ -7,21 +7,13 @@ class ClientController {
   static async createClient(req, res) {
     try {
       // Extraer la API Key desde el body
-      const { api_key, ...clientData } = req.body;
+      const { ...clientData } = req.body;
   
       // Extraer el ID del usuario desde la solicitud
       const id = req.id;
   
       // Referencia al documento del usuario
       const userRef = userCollection.doc(id);
-  
-      // Verificar si el documento del usuario existe
-      const userDoc = await userRef.get();
-  
-      // Verificar que la API Key esté presente en el body
-      if (!api_key) {
-        return res.status(400).json({ message: "API Key requerida." });
-      }
   
       // Crear un nuevo documento en la colección "client"
       const newClientRef = collection.doc();
@@ -46,14 +38,7 @@ class ClientController {
 
 static async getClients(req, res) {
   try {
-    // Extraer la API Key desde el body
-    const { api_key } = req.body;
     const id = req.id;
-
-    // Verificar que la API Key esté presente en el body
-    if (!api_key) {
-      return res.status(400).json({ message: "API Key requerida." });
-    }
 
     // Referencia al documento del usuario
     const userRef = userCollection.doc(id);

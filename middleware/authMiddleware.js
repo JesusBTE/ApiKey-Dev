@@ -6,24 +6,20 @@ const jwt = require("jsonwebtoken");
 exports.authenticateToken = async (req, res, next) => {
   try {
     // Obtener el token desde el encabezado "Authorization"
-    const token = req.header("Authorization");
+    const api_key = req.body.api_key
     
     // Si no hay token, denegar el acceso
-    if (!token) {
+    if (!api_key) {
       return res.status(403).json({ message: "Acceso denegado" });
     }
     
-    //Remover el prefijo "Bearer " del token
-    const tokenWithoutBearer = token.replace("Bearer ", "");
-
     // // Decodificar el token sin verificarlo (para extraer el userId)
     // const decoded = jwt.decode(tokenWithoutBearer);
     //Se busca si existe un usuario con esta api_key
    
-   
     // Buscar la secretKey en la base de datos de usuarios
     const userSnapshot = await userCollection
-      .where("secretKey", "==", tokenWithoutBearer)
+      .where("secretKey", "==", api_key)
       .get();
 
     // Si no existe una secretkey, retorna un error

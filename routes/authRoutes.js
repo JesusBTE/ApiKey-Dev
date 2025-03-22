@@ -9,6 +9,13 @@ const authController = require("../controllers/authController");
 
 router.post("/register", authController.register);
 
+router.get("/key", authController.getKey)
+
+router.get("/newkey", authController.updateSecretKey )
+
+router.put("/", authController.updateUser)
+
+router.delete("/", authController.deleteUser)
 // Exportamos el router para que pueda ser utilizado en la aplicación principal
 
 module.exports = router;
