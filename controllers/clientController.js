@@ -90,6 +90,93 @@ class ClientController {
       res.status(400).json({ message: "Error al recuperar los clientes" });
     }
   }
+
+  static async getClientById(req, res) {
+    try {
+      const userId = req.id;
+      const { id } = req.params;
+  
+      if (!userId) {
+        return res.status(400).json({ message: "ID de usuario no proporcionado" });
+      }
+  
+      // Referencia al documento del usuario
+      const userRef = userCollection.doc(userId);
+      const userDoc = await userRef.get();
+  
+      if (!userDoc.exists) {
+        return res.status(404).json({ message: "Usuario no encontrado" });
+      }
+  
+      // Obtener el arreglo de IDs de clientes del usuario
+      const userClients = userDoc.data().clients || [];
+  
+      if (userClients.length === 0 || !userClients.includes(id)) {
+        return res.status(404).json({ message: "Cliente no encontrado o no autorizado" });
+      }
+  
+      // Referencia al documento del cliente
+      const clientRef = collection.doc(id);
+      const clientDoc = await clientRef.get();
+  
+      if (!clientDoc.exists) {
+        return res.status(404).json({ message: "Cliente no encontrado" });
+      }
+  
+      // Construir el objeto cliente
+      const client = { id: clientDoc.id, ...clientDoc.data() };
+  
+      // Respuesta exitosa
+      res.status(200).json(client);
+    } catch (error) {
+      console.error("Error al obtener el cliente por ID:", error);
+      res.status(400).json({ message: "Error al recuperar el cliente" });
+    }
+  }
+
+  static async deleteClientById(req, res) {
+    try {
+      const userId = req.id;
+      const { id } = req.params;
+  
+      if (!userId) {
+        return res.status(400).json({ message: "ID de usuario no proporcionado" });
+      }
+  
+      // Referencia al documento del usuario
+      const userRef = userCollection.doc(userId);
+      const userDoc = await userRef.get();
+  
+      if (!userDoc.exists) {
+        return res.status(404).json({ message: "Usuario no encontrado" });
+      }
+  
+      // Obtener el arreglo de IDs de clientes del usuario
+      const userClients = userDoc.data().clients || [];
+  
+      if (userClients.length === 0 || !userClients.includes(id)) {
+        return res.status(404).json({ message: "Cliente no encontrado o no autorizado" });
+      }
+  
+      // Referencia al documento del cliente
+      const clientRef = collection.doc(id);
+      const clientDoc = await clientRef.get();
+  
+      if (!clientDoc.exists) {
+        return res.status(404).json({ message: "Cliente no encontrado" });
+      }
+  
+      // Eliminar el cliente
+      await clientRef.delete();
+  
+      // Respuesta exitosa
+      res.status(200).json({ message: "Cliente eliminado correctamente" });
+    } catch (error) {
+      console.error("Error al eliminar el cliente por ID:", error);
+      res.status(400).json({ message: "Error al eliminar el cliente" });
+    }
+  }
+
 }
 // Exportamos la clase para que pueda ser utilizada en las rutas
 module.exports = ClientController;
