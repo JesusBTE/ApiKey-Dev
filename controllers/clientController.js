@@ -134,6 +134,50 @@ class ClientController {
     }
   }
 
+  static async updateClientById(req, res) {
+    try {
+      const userId = req.id;
+      const { id } = req.params;
+      const updatedClientData = req.body;
+  
+      if (!userId) {
+        return res.status(400).json({ message: "ID de usuario no proporcionado" });
+      }
+  
+      // Referencia al documento del usuario
+      const userRef = userCollection.doc(userId);
+      const userDoc = await userRef.get();
+  
+      if (!userDoc.exists) {
+        return res.status(404).json({ message: "Usuario no encontrado" });
+      }
+  
+      // Obtener el arreglo de IDs de clientes del usuario
+      const userClients = userDoc.data().clients || [];
+  
+      if (userClients.length === 0 || !userClients.includes(id)) {
+        return res.status(404).json({ message: "Cliente no encontrado o no autorizado" });
+      }
+  
+      // Referencia al documento del cliente
+      const clientRef = collection.doc(id);
+      const clientDoc = await clientRef.get();
+  
+      if (!clientDoc.exists) {
+        return res.status(404).json({ message: "Cliente no encontrado" });
+      }
+  
+      // Actualizar los datos del cliente
+      await clientRef.set(updatedClientData, { merge: true });
+  
+      // Respuesta exitosa
+      res.status(200).json({ message: "Cliente actualizado correctamente", id, ...updatedClientData });
+    } catch (error) {
+      console.error("Error al actualizar el cliente por ID:", error);
+      res.status(400).json({ message: "Error al actualizar el cliente" });
+    }
+  }
+
   static async deleteClientById(req, res) {
     try {
       const userId = req.id;

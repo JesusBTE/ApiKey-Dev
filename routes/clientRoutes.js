@@ -17,6 +17,9 @@ router.get("/:id", aToken, clientController.getClientById);
 // Crear un nuevo cliente
 router.post("/", aToken,clientController.createClient);
 
+// Actualizar un cliente por ID
+router.put("/:id", aToken, clientController.updateClientById);
+
 // Eliminar un cliente por ID
 router.delete("/:id", aToken, clientController.deleteClientById);
 
