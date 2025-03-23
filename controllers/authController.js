@@ -39,7 +39,7 @@ exports.register = async (req, res) => {
       username,
       password: hashedPassword, // Guarda la contraseña cifrada
       secretKey: uniqueSecretKey, // Guarda la clave secreta única
-      clients: []
+      clients: [],
     };
 
     // Agregar el nuevo usuario a la colección en Firestore
@@ -54,7 +54,7 @@ exports.register = async (req, res) => {
     console.error("Error al registrar usuario:", error);
 
     // Respuesta de error en caso de fallos en el servidor
-    res.status(500).json({ message: "Error interno del servidor" });
+    res.status(422).json({ message: "Error al procesar la contraseña" });
   }
 };
 
@@ -98,8 +98,11 @@ exports.getKey = async (req, res) => {
   } catch (error) {
     console.error("Error al obtener la clave secreta:", error);
 
-    // Respuesta de error en caso de fallos en el servidor
-    res.status(500).json({ message: "Error interno del servidor" });
+    // Respuesta de error en caso de fallos
+    return res.status(400).json({
+      message:
+        "Error en la solicitud. Verifica los datos e inténtalo de nuevo.",
+    });
   }
 };
 
@@ -152,7 +155,10 @@ exports.updateSecretKey = async (req, res) => {
     console.error("Error al actualizar la clave secreta:", error);
 
     // Respuesta de error en caso de fallos en el servidor
-    res.status(500).json({ message: "Error interno del servidor" });
+    return res.status(409).json({
+      message:
+        "No se pudo actualizar la clave secreta. Por favor, intenta de nuevo más tarde.",
+    });
   }
 };
 
@@ -193,15 +199,17 @@ exports.updateUser = async (req, res) => {
       return res.status(401).json({ message: "Credenciales incorrectas" });
     }
 
-     // Verificar si el nuevo nombre de usuario ya está en uso
-     if (newUsername) {
+    // Verificar si el nuevo nombre de usuario ya está en uso
+    if (newUsername) {
       const newUsernameSnapshot = await userCollection
         .where("username", "==", newUsername)
         .get();
 
       // Si ya existe un usuario con el nuevo nombre de usuario, retorna un error
       if (!newUsernameSnapshot.empty) {
-        return res.status(400).json({ message: "El nombre de usuario ya está en uso" });
+        return res
+          .status(400)
+          .json({ message: "El nombre de usuario ya está en uso" });
       }
     }
 
@@ -234,8 +242,8 @@ exports.updateUser = async (req, res) => {
   } catch (error) {
     console.error("Error al actualizar el usuario:", error);
 
-    // Respuesta de error en caso de fallos en el servidor
-    res.status(500).json({ message: "Error interno del servidor" });
+    // Respuesta de error en caso de fallos
+    res.status(422).json({ message: "No se pudo actualizar el usuario" });
   }
 };
 
@@ -288,11 +296,13 @@ exports.deleteUser = async (req, res) => {
     await userCollection.doc(userDoc.id).delete();
 
     // Respuesta exitosa
-    res.status(200).json({ message: "Usuario y clientes eliminados correctamente" });
+    res
+      .status(200)
+      .json({ message: "Usuario y clientes eliminados correctamente" });
   } catch (error) {
     console.error("Error al eliminar el usuario:", error);
 
-    // Respuesta de error en caso de fallos en el servidor
-    res.status(500).json({ message: "Error interno del servidor" });
+    // Respuesta de error en caso de fallos
+    res.status(422).json({ message: "No se pudo eliminar el usuario" });
   }
 };
