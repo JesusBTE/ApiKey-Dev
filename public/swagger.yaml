@@ -1,350 +1,340 @@
 openapi: 3.0.0
 info:
-  title: API de Productos
-  description: Documentación de la API para la gestión de productos, categorías, compras y usuarios.
+  title: API de Clientes
+  description: Documentación de la API para la gestión de clientes con el uso de ApiKey.
   version: 1.0.0
 servers:
-  - url: https://apis-prodcutos.onrender.com/apiV1/
+  - url: https://apikey-dev.onrender.com/apiV1/
     description: Servidor en Render
 
 paths:
-  /products:
-    get:
-      summary: Obtener todos los productos
-      responses:
-        "200":
-          description: Lista de productos
+  /client:
     post:
-      summary: Crear un nuevo producto
+      summary: Crear un nuevo cliente
+      description: Crea un nuevo cliente asociado a un usuario.
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/Producto"
+              type: object
+              properties:
+                id:
+                  type: string
+                  description: ID del usuario.
+                clientData:
+                  type: object
+                  description: Datos del cliente.
       responses:
-        "201":
-          description: Producto creado
+        '201':
+          description: Cliente creado correctamente.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  id:
+                    type: string
+                  clientData:
+                    type: object
+        '400':
+          description: Error en la solicitud.
+        '404':
+          description: Usuario no encontrado.
 
-  /products/{id}:
     get:
-      summary: Obtener un producto por ID
+      summary: Obtener todos los clientes
+      description: Obtiene todos los clientes asociados a un usuario.
+      parameters:
+        - name: id
+          in: query
+          required: true
+          schema:
+            type: string
+          description: ID del usuario.
+      responses:
+        '200':
+          description: Lista de clientes obtenida correctamente.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: string
+                    clientData:
+                      type: object
+        '400':
+          description: Error en la solicitud.
+        '404':
+          description: Usuario no encontrado.
+
+  /client/{id}:
+    get:
+      summary: Obtener un cliente por ID
+      description: Obtiene un cliente específico por su ID.
       parameters:
         - name: id
           in: path
           required: true
           schema:
             type: string
+          description: ID del cliente.
       responses:
-        "200":
-          description: Datos del producto
+        '200':
+          description: Cliente obtenido correctamente.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                  clientData:
+                    type: object
+        '400':
+          description: Error en la solicitud.
+        '404':
+          description: Cliente no encontrado o no autorizado.
+
     put:
-      summary: Actualizar un producto por ID
+      summary: Actualizar un cliente por ID
+      description: Actualiza los datos de un cliente específico por su ID.
       parameters:
         - name: id
           in: path
           required: true
           schema:
             type: string
+          description: ID del cliente.
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/Producto"
+              type: object
+              properties:
+                clientData:
+                  type: object
+                  description: Nuevos datos del cliente.
       responses:
-        "200":
-          description: Producto actualizado
+        '200':
+          description: Cliente actualizado correctamente.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  id:
+                    type: string
+                  clientData:
+                    type: object
+        '400':
+          description: Error en la solicitud.
+        '404':
+          description: Cliente no encontrado o no autorizado.
+
     delete:
-      summary: Eliminar un producto por ID
+      summary: Eliminar un cliente por ID
+      description: Elimina un cliente específico por su ID.
       parameters:
         - name: id
           in: path
           required: true
           schema:
             type: string
+          description: ID del cliente.
       responses:
-        "204":
-          description: Producto eliminado
+        '200':
+          description: Cliente eliminado correctamente.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+        '400':
+          description: Error en la solicitud.
+        '404':
+          description: Cliente no encontrado o no autorizado.
 
-  /products/{id}/history:
-    get:
-      summary: Obtener el historial de precios de un producto
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: string
-      responses:
-        "200":
-          description: Historial de precios del producto
-
-  /products/{id}/sugerencias:
-    get:
-      summary: Obtener sugerencias de productos basadas en compras previas
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: string
-      responses:
-        "200":
-          description: Sugerencias de productos
-
-  /products/{id}/tendenciasPrecios:
-    get:
-      summary: Predecir tendencias de precios de un producto
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: string
-      responses:
-        "200":
-          description: Tendencia de precios del producto
-
-  /categories:
-    get:
-      summary: Obtener todas las categorías
-      responses:
-        "200":
-          description: Lista de categorías
-
-  /categories/{id}:
-    get:
-      summary: Obtener una categoría por ID
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: string
-      responses:
-        "200":
-          description: Detalles de la categoría
-
-  /purchases:
-    get:
-      summary: Obtener todas las compras
-      responses:
-        "200":
-          description: Lista de compras
+  /auth/register:
     post:
-      summary: Crear una nueva compra
+      summary: Registrar un nuevo usuario
+      description: Registra un nuevo usuario en la base de datos.
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/Compra"
+              type: object
+              properties:
+                username:
+                  type: string
+                password:
+                  type: string
       responses:
-        "201":
-          description: Compra creada
+        '201':
+          description: Usuario registrado correctamente.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  secretKey:
+                    type: string
+        '400':
+          description: Usuario ya existe o datos faltantes.
+        '422':
+          description: Error al procesar la contraseña.
 
-  /purchases/{id}:
-    get:
-      summary: Obtener una compra por ID
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: string
-      responses:
-        "200":
-          description: Detalles de la compra
-    put:
-      summary: Actualizar una compra por ID
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: string
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/Compra"
-      responses:
-        "200":
-          description: Compra actualizada
-    delete:
-      summary: Eliminar una compra por ID
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: string
-      responses:
-        "204":
-          description: Compra eliminada
-
-  /users:
-    get:
-      summary: Obtener todos los usuarios
-      responses:
-        "200":
-          description: Lista de usuarios
+  /auth/getKey:
     post:
-      summary: Crear un nuevo usuario
+      summary: Obtener la clave secreta
+      description: Obtiene la clave secreta de un usuario.
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/Usuario"
+              type: object
+              properties:
+                username:
+                  type: string
+                password:
+                  type: string
       responses:
-        "201":
-          description: Usuario creado
+        '200':
+          description: Clave secreta obtenida correctamente.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  secretKey:
+                    type: string
+        '400':
+          description: Datos faltantes o error en la solicitud.
+        '401':
+          description: Credenciales incorrectas.
+        '404':
+          description: Usuario no encontrado.
 
-  /users/{id}:
-    get:
-      summary: Obtener un usuario por ID
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: string
-      responses:
-        "200":
-          description: Detalles del usuario
-    put:
-      summary: Actualizar un usuario por ID
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: string
+  /auth/updateSecretKey:
+    post:
+      summary: Actualizar la clave secreta
+      description: Actualiza la clave secreta de un usuario.
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/Usuario"
+              type: object
+              properties:
+                username:
+                  type: string
+                password:
+                  type: string
       responses:
-        "200":
-          description: Usuario actualizado
-    delete:
-      summary: Eliminar un usuario por ID
-      parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: string
+        '200':
+          description: Clave secreta actualizada correctamente.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  secretKey:
+                    type: string
+        '400':
+          description: Datos faltantes o error en la solicitud.
+        '401':
+          description: Contraseña incorrecta.
+        '404':
+          description: Usuario no encontrado.
+        '409':
+          description: Error al actualizar la clave secreta.
+
+  /auth/updateUser:
+    post:
+      summary: Actualizar usuario
+      description: Actualiza los datos de un usuario.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                password:
+                  type: string
+                newUsername:
+                  type: string
+                newPassword:
+                  type: string
       responses:
-        "204":
-          description: Usuario eliminado
+        '200':
+          description: Usuario actualizado correctamente.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  secretKey:
+                    type: string
+        '400':
+          description: Datos faltantes o nombre de usuario ya en uso.
+        '401':
+          description: Credenciales incorrectas.
+        '422':
+          description: Error al actualizar el usuario.
 
-components:
-  schemas:
-    Producto:
-      type: object
-      properties:
-        id:
-          type: string
-          description: ID del producto
-        nombre:
-          type: string
-          description: Nombre del producto
-        precio:
-          type: number
-          description: Precio del producto
-        enStock:
-          type: boolean
-          description: Indica si el producto está en stock
-        categoria:
-          type: string
-          description: Categoría del producto
-        detalles:
-          type: object
-          properties:
-            procesador:
-              type: string
-            ram:
-              type: string
-            almacenamiento:
-              type: string
-        historialPrecios:
-          type: array
-          items:
-            $ref: "#/components/schemas/PrecioHistorial"
-      example:
-        id: "1"
-        nombre: "Laptop Gamer"
-        precio: 1200
-        enStock: true
-        categoria: "Electrónica"
-        detalles:
-          procesador: "Intel i7"
-          ram: "16GB"
-          almacenamiento: "512GB SSD"
-        historialPrecios:
-          - fecha: "2023-10-01T00:00:00Z"
-            precioAnterior: 1100
-
-    PrecioHistorial:
-      type: object
-      properties:
-        fecha:
-          type: string
-          format: date-time
-          description: Fecha del cambio de precio
-        precioAnterior:
-          type: number
-          description: Precio anterior del producto
-
-    Compra:
-      type: object
-      properties:
-        productosId:
-          type: array
-          items:
-            type: string
-          description: IDs de los productos comprados
-        idUsuario:
-          type: string
-          description: ID del usuario que realizó la compra
-        total:
-          type: number
-          description: Total de la compra
-        fecha:
-          type: string
-          format: date-time
-          description: Fecha de la compra
-      example:
-        productosId: ["1", "5"]
-        idUsuario: "3WMYnpmjjq1s8QYtkwqm"
-        total: 800
-        fecha: "2024-03-05T20:15:00Z"
-
-    Usuario:
-      type: object
-      properties:
-        id:
-          type: string
-          description: ID del usuario
-        nombre:
-          type: string
-          description: Nombre del usuario
-        email:
-          type: string
-          description: Correo electrónico del usuario
-        idCompras:
-          type: array
-          items:
-            type: string
-          description: IDs de las compras realizadas por el usuario
-      example:
-        id: "123"
-        nombre: "Juan Pérez"
-        email: "juan@example.com"
-        idCompras: ["1", "2"]
+  /auth/deleteUser:
+    post:
+      summary: Eliminar usuario
+      description: Elimina un usuario y sus clientes asociados.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                password:
+                  type: string
+      responses:
+        '200':
+          description: Usuario y clientes eliminados correctamente.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+        '400':
+          description: Datos faltantes o error en la solicitud.
+        '401':
+          description: Credenciales incorrectas.
+        '404':
+          description: Usuario no encontrado.
+        '422':
+          description: Error al eliminar el usuario.
