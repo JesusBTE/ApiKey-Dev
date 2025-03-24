@@ -1,6 +1,7 @@
 // Importamos Express para crear el servidor
 const express = require("express");
 const app = express();
+const path = require("path");
 
 // Importamos las rutas de clientes
 const clientRoutes = require("./routes/clientRoutes");
