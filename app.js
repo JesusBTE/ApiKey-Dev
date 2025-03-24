@@ -16,6 +16,9 @@ app.use("/apiV1/client", clientRoutes);
 
 app.use("/apiV1/auth", authRoutes);
 
+// Servir archivos estáticos desde la carpeta "public"
+app.use(express.static(path.join(__dirname, "public")));
+
 // Definimos el puerto en el que se ejecutará el servidor
 const PORT = process.env.PORT || 3001;
 
