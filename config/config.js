@@ -2,7 +2,8 @@
 const admin = require("firebase-admin");
 
 // Importamos el archivo de configuración con las credenciales de Firebase
-const serviceAccount = require("../key.json");
+const serviceAccount = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT);
+
 
 // Inicializamos la aplicación de Firebase con las credenciales de administrador
 admin.initializeApp({
