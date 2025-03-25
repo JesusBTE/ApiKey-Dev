@@ -19,12 +19,75 @@ paths:
             schema:
               type: object
               properties:
-                id:
+                api_key: 
                   type: string
-                  description: ID del usuario.
-                clientData:
+                  description: APIKey del usuario para acceder a su cuenta.
+                  example: "xxxxxxxxxxxxxxxxxxxxxxxxx" 
+                legal_name:
+                  type: string
+                  description: Full legal name of the user or company.
+                  example: "Miguel López2"
+                tax_id:
+                  type: string
+                  description: Unique tax identification number.
+                  example: "ABC101010111"
+                tax_system:
+                  type: string
+                  description: Tax system code applicable to the user.
+                  example: "601"
+                email:
+                  type: string
+                  format: email
+                  description: Contact email of the user.
+                  example: "dunder@gmail.com"
+                phone:
+                  type: integer
+                  description: Contact phone number (without country code).
+                  example: 6474010101
+                default_invoice_use:
+                  type: string
+                  description: Default use case for invoices as per tax regulations.
+                  example: "G01"
+                address:
                   type: object
-                  description: Datos del cliente.
+                  description: Physical address of the user.
+                  properties:
+                    street:
+                      type: string
+                      description: Name of the street.
+                      example: "Blvd. Atardecer"
+                    exterior:
+                      type: integer
+                      description: Exterior number of the building.
+                      example: 142
+                    interior:
+                      type: integer
+                      description: Interior number of the building, if applicable.
+                      example: 4
+                    neighborhood:
+                      type: string
+                      description: Neighborhood or subdivision name.
+                      example: "Centro"
+                    city:
+                      type: string
+                      description: City where the address is located.
+                      example: "Huatabampo"
+                    municipality:
+                      type: string
+                      description: Municipality of the address.
+                      example: "Huatabampo"
+                    zip:
+                      type: integer
+                      description: Postal or ZIP code.
+                      example: 86500
+                    state:
+                      type: string
+                      description: State or province of the address.
+                      example: "Sonora"
+                    country:
+                      type: string
+                      description: Country code in ISO 3166-1 alpha-3 format.
+                      example: "MEX"
       responses:
         '201':
           description: Cliente creado correctamente.
@@ -35,25 +98,81 @@ paths:
                 properties:
                   message:
                     type: string
+                    example: "Cliente creado correctamente"
                   id:
                     type: string
-                  clientData:
+                    example: "GB70fTCVibmkkN0T5zH2"
+                  apikey:
+                    type: string
+                    example: "xxxxxxxxxxxxxxxxxxxxxxxxx" 
+                  legal_name:
+                    type: string
+                    example: "Miguel López2"
+                  tax_id:
+                    type: string
+                    example: "ABC101010111"
+                  tax_system:
+                    type: string
+                    example: "601"
+                  email:
+                    type: string
+                    format: email
+                    example: "dunder@gmail.com"
+                  phone:
+                    type: integer
+                    example: 6474010101
+                  default_invoice_use:
+                    type: string
+                    example: "G01"
+                  address:
                     type: object
+                    properties:
+                      street:
+                        type: string
+                        example: "Blvd. Atardecer"
+                      exterior:
+                        type: integer
+                        example: 142
+                      interior:
+                        type: integer
+                        example: 4
+                      neighborhood:
+                        type: string
+                        example: "Centro"
+                      city:
+                        type: string
+                        example: "Huatabampo"
+                      municipality:
+                        type: string
+                        example: "Huatabampo"
+                      zip:
+                        type: integer
+                        example: 86500
+                      state:
+                        type: string
+                        example: "Sonora"
+                      country:
+                        type: string
+                        example: "MEX"
         '400':
           description: Error en la solicitud.
         '404':
           description: Usuario no encontrado.
-
-    get:
+  /client/get:
+    post:
       summary: Obtener todos los clientes
       description: Obtiene todos los clientes asociados a un usuario.
-      parameters:
-        - name: id
-          in: query
-          required: true
-          schema:
-            type: string
-          description: ID del usuario.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                api_key: 
+                  type: string
+                  description: APIKey del usuario para acceder a su cuenta.
+                  example: "xxxxxxxxxxxxxxxxxxxxxxxxx" 
       responses:
         '200':
           description: Lista de clientes obtenida correctamente.
@@ -64,17 +183,68 @@ paths:
                 items:
                   type: object
                   properties:
-                    id:
-                      type: string
-                    clientData:
-                      type: object
+                      id:
+                        type: string
+                        example: "GB70fTCVibmkkN0T5zH2"
+                      apikey:
+                        type: string
+                        example: "xxxxxxxxxxxxxxxxxxxxxxxxx" 
+                      legal_name:
+                        type: string
+                        example: "Miguel López2"
+                      tax_id:
+                        type: string
+                        example: "ABC101010111"
+                      tax_system:
+                        type: string
+                        example: "601"
+                      email:
+                        type: string
+                        format: email
+                        example: "dunder@gmail.com"
+                      phone:
+                        type: integer
+                        example: 6474010101
+                      default_invoice_use:
+                        type: string
+                        example: "G01"
+                      address:
+                        type: object
+                        properties:
+                          street:
+                            type: string
+                            example: "Blvd. Atardecer"
+                          exterior:
+                            type: integer
+                            example: 142
+                          interior:
+                            type: integer
+                            example: 4
+                          neighborhood:
+                            type: string
+                            example: "Centro"
+                          city:
+                            type: string
+                            example: "Huatabampo"
+                          municipality:
+                            type: string
+                            example: "Huatabampo"
+                          zip:
+                            type: integer
+                            example: 86500
+                          state:
+                            type: string
+                            example: "Sonora"
+                          country:
+                            type: string
+                            example: "MEX"
         '400':
           description: Error en la solicitud.
         '404':
           description: Usuario no encontrado.
 
-  /client/{id}:
-    get:
+  /client/get/{id}:
+    post:
       summary: Obtener un cliente por ID
       description: Obtiene un cliente específico por su ID.
       parameters:
@@ -84,6 +254,17 @@ paths:
           schema:
             type: string
           description: ID del cliente.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                api_key: 
+                  type: string
+                  description: APIKey del usuario para acceder a su cuenta.
+                  example: "xxxxxxxxxxxxxxxxxxxxxxxxx"
       responses:
         '200':
           description: Cliente obtenido correctamente.
@@ -100,7 +281,7 @@ paths:
           description: Error en la solicitud.
         '404':
           description: Cliente no encontrado o no autorizado.
-
+  /client/{id}:
     put:
       summary: Actualizar un cliente por ID
       description: Actualiza los datos de un cliente específico por su ID.
@@ -118,9 +299,75 @@ paths:
             schema:
               type: object
               properties:
-                clientData:
+                api_key: 
+                  type: string
+                  description: APIKey del usuario para acceder a su cuenta.
+                  example: "xxxxxxxxxxxxxxxxxxxxxxxxx" 
+                legal_name:
+                  type: string
+                  description: Full legal name of the user or company.
+                  example: "Miguel López2"
+                tax_id:
+                  type: string
+                  description: Unique tax identification number.
+                  example: "ABC101010111"
+                tax_system:
+                  type: string
+                  description: Tax system code applicable to the user.
+                  example: "601"
+                email:
+                  type: string
+                  format: email
+                  description: Contact email of the user.
+                  example: "dunder@gmail.com"
+                phone:
+                  type: integer
+                  description: Contact phone number (without country code).
+                  example: 6474010101
+                default_invoice_use:
+                  type: string
+                  description: Default use case for invoices as per tax regulations.
+                  example: "G01"
+                address:
                   type: object
-                  description: Nuevos datos del cliente.
+                  description: Physical address of the user.
+                  properties:
+                    street:
+                      type: string
+                      description: Name of the street.
+                      example: "Blvd. Atardecer"
+                    exterior:
+                      type: integer
+                      description: Exterior number of the building.
+                      example: 142
+                    interior:
+                      type: integer
+                      description: Interior number of the building, if applicable.
+                      example: 4
+                    neighborhood:
+                      type: string
+                      description: Neighborhood or subdivision name.
+                      example: "Centro"
+                    city:
+                      type: string
+                      description: City where the address is located.
+                      example: "Huatabampo"
+                    municipality:
+                      type: string
+                      description: Municipality of the address.
+                      example: "Huatabampo"
+                    zip:
+                      type: integer
+                      description: Postal or ZIP code.
+                      example: 86500
+                    state:
+                      type: string
+                      description: State or province of the address.
+                      example: "Sonora"
+                    country:
+                      type: string
+                      description: Country code in ISO 3166-1 alpha-3 format.
+                      example: "MEX"
       responses:
         '200':
           description: Cliente actualizado correctamente.
@@ -131,10 +378,62 @@ paths:
                 properties:
                   message:
                     type: string
+                    example: "Cliente actualizado correctamente"
                   id:
                     type: string
-                  clientData:
+                    example: "GB70fTCVibmkkN0T5zH2"
+                  apikey:
+                    type: string
+                    example: "xxxxxxxxxxxxxxxxxxxxxxxxx" 
+                  legal_name:
+                    type: string
+                    example: "Miguel López2"
+                  tax_id:
+                    type: string
+                    example: "ABC101010111"
+                  tax_system:
+                    type: string
+                    example: "601"
+                  email:
+                    type: string
+                    format: email
+                    example: "dunder@gmail.com"
+                  phone:
+                    type: integer
+                    example: 6474010101
+                  default_invoice_use:
+                    type: string
+                    example: "G01"
+                  address:
                     type: object
+                    properties:
+                      street:
+                        type: string
+                        example: "Blvd. Atardecer"
+                      exterior:
+                        type: integer
+                        example: 142
+                      interior:
+                        type: integer
+                        example: 4
+                      neighborhood:
+                        type: string
+                        example: "Centro"
+                      city:
+                        type: string
+                        example: "Huatabampo"
+                      municipality:
+                        type: string
+                        example: "Huatabampo"
+                      zip:
+                        type: integer
+                        example: 86500
+                      state:
+                        type: string
+                        example: "Sonora"
+                      country:
+                        type: string
+                        example: "MEX"
         '400':
           description: Error en la solicitud.
         '404':
@@ -150,6 +449,17 @@ paths:
           schema:
             type: string
           description: ID del cliente.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                api_key: 
+                  type: string
+                  description: APIKey del usuario para acceder a su cuenta.
+                  example: "xxxxxxxxxxxxxxxxxxxxxxxxx"
       responses:
         '200':
           description: Cliente eliminado correctamente.
@@ -160,6 +470,7 @@ paths:
                 properties:
                   message:
                     type: string
+                    example: "Cliente eliminado correctamente"
         '400':
           description: Error en la solicitud.
         '404':
@@ -178,8 +489,10 @@ paths:
               properties:
                 username:
                   type: string
+                  example: "usuario1"
                 password:
                   type: string
+                  example: "12345"
       responses:
         '201':
           description: Usuario registrado correctamente.
@@ -190,14 +503,15 @@ paths:
                 properties:
                   message:
                     type: string
+                    example: "Usuario registrado correctamente"
                   secretKey:
-                    type: string
+                    type: "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
         '400':
           description: Usuario ya existe o datos faltantes.
         '422':
           description: Error al procesar la contraseña.
 
-  /auth/getKey:
+  /auth/key:
     post:
       summary: Obtener la clave secreta
       description: Obtiene la clave secreta de un usuario.
@@ -210,8 +524,10 @@ paths:
               properties:
                 username:
                   type: string
+                  example: "usuario1"
                 password:
                   type: string
+                  example: "12345"
       responses:
         '200':
           description: Clave secreta obtenida correctamente.
@@ -222,8 +538,9 @@ paths:
                 properties:
                   message:
                     type: string
+                    example: "Clave secreta obtenida correctamente"
                   secretKey:
-                    type: string
+                    type: "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
         '400':
           description: Datos faltantes o error en la solicitud.
         '401':
@@ -231,7 +548,7 @@ paths:
         '404':
           description: Usuario no encontrado.
 
-  /auth/updateSecretKey:
+  /auth/newkey:
     post:
       summary: Actualizar la clave secreta
       description: Actualiza la clave secreta de un usuario.
@@ -244,8 +561,10 @@ paths:
               properties:
                 username:
                   type: string
+                  example: "usuario1"
                 password:
                   type: string
+                  example: "12345"
       responses:
         '200':
           description: Clave secreta actualizada correctamente.
@@ -256,8 +575,9 @@ paths:
                 properties:
                   message:
                     type: string
+                    example: "Clave secreta actualizada correctamente"
                   secretKey:
-                    type: string
+                    type: "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
         '400':
           description: Datos faltantes o error en la solicitud.
         '401':
@@ -267,8 +587,8 @@ paths:
         '409':
           description: Error al actualizar la clave secreta.
 
-  /auth/updateUser:
-    post:
+  /auth:
+    put:
       summary: Actualizar usuario
       description: Actualiza los datos de un usuario.
       requestBody:
@@ -280,12 +600,16 @@ paths:
               properties:
                 username:
                   type: string
+                  example: "usuario1"
                 password:
                   type: string
+                  example: "12345"
                 newUsername:
                   type: string
+                  example: "usuario2"
                 newPassword:
                   type: string
+                  example: "123456"
       responses:
         '200':
           description: Usuario actualizado correctamente.
@@ -296,17 +620,16 @@ paths:
                 properties:
                   message:
                     type: string
+                    example: "Usuario actualizado correctamente"
                   secretKey:
-                    type: string
+                    type: "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
         '400':
           description: Datos faltantes o nombre de usuario ya en uso.
         '401':
           description: Credenciales incorrectas.
         '422':
           description: Error al actualizar el usuario.
-
-  /auth/deleteUser:
-    post:
+    delete:
       summary: Eliminar usuario
       description: Elimina un usuario y sus clientes asociados.
       requestBody:
@@ -318,8 +641,10 @@ paths:
               properties:
                 username:
                   type: string
+                  example: "usuario1"
                 password:
                   type: string
+                  example: "12345"
       responses:
         '200':
           description: Usuario y clientes eliminados correctamente.
@@ -330,6 +655,7 @@ paths:
                 properties:
                   message:
                     type: string
+                    example: "Usuario y clientes eliminados correctamente"
         '400':
           description: Datos faltantes o error en la solicitud.
         '401':
